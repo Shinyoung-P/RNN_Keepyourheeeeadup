@@ -19,7 +19,7 @@ time.sleep(2)
 print("시리얼 데이터 수신 시작 (Ctrl+C로 종료)")
 
 # 분류 모델 로드 (모델 파일 경로는 실제 파일 경로로 수정 필요)
-model_path = 'C:\\Users\\sypza\\RNN_Keepyourheeeeadup\\model\\keepheeead-model-0142.pkl'
+model_path = 'C:\\Users\\sypza\\RNN_Keepyourheeeeadup\\model\\keepheeead-model-0449.pkl'
 try:
     classifier = joblib.load(model_path)
     print("모델 로드 성공")
@@ -34,10 +34,9 @@ try:
     while True:
         # 한 줄씩 읽어 들임 (바이트 형태)
         try:
-            print("AAAAAA")
             raw_line = ser.readline()
-            print("BBBBBB")
             decoded_line = raw_line.decode('utf-8', errors='replace').strip()
+            print("JJJJ")
 
             # 구분자 '|'를 기준으로 데이터 분리
             parts = decoded_line.split('|')
@@ -48,29 +47,31 @@ try:
         except Exception as e:
             print("데이터 처리 중 에러:", e)
             continue
-
+        
+        print("KKKK")
         # 문자열이 있을 경우 처리
         if line:
             values = line.split(',')
-            if len(values) == 10:
+            if len(values) == 13:
                 try:
-                    print("CCCCCCC")
+                    print("AAAA")
                     # 숫자 데이터 변환; 변환 실패 시 해당 행 무시
                     roll1, pitch1, roll2, pitch2, roll3, pitch3, roll4, pitch4,\
                     roll5, pitch5, roll6, pitch6, FSR = map(float, line.split(','))
                     FSR = int(FSR)
-
+                    print("BBBB")
                     # 모델 입력 데이터 준비
                     input_features = np.array([roll1, pitch1, roll2, pitch2, roll3, pitch3, 
                                                 roll5, roll6, pitch6, FSR]).reshape(1, -1)
 
-                    print("DDDDDDD")
+                    print("CCCC")
                     # 분류 모델 적용
                     predicted_class = classifier.predict(input_features)[0]
                 except ValueError:
+                    print("have to MPU Restart")
                     continue
 
-                print("FFFFFFFF")
+                
                 # 터미널에 출력
                 print(t, roll1, pitch1, roll2, pitch2, roll3, pitch3, roll5, roll6, pitch6, FSR, predicted_class)
 
